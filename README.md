@@ -1,2 +1,2 @@
-# Future project
-## Clock, Timer, Alarm, Stopwatch, World clock
+# FunCal
+## Calculator from the world of fun

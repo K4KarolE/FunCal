@@ -1,2 +1,2 @@
-# FunCal
-## Calculator from the world of fun
+# Future Project
+## Calculator from the world of Easter eggs

@@ -12,8 +12,8 @@ from pathlib import Path
 
 app = QApplication(sys.argv)
 window = QWidget()
-window.resize(650, 300)
-window.setWindowIcon(QIcon(str(Path(Path(__file__).parent, 'skins/icon.png'))))
+window.resize(450, 250)
+window.setWindowIcon(QIcon(str(Path(Path(__file__).parent, 'docs/icon.png'))))
 window.setWindowTitle("Subtitle Audio Description Removal")
 listWidget = QListWidget()
 sub_dic = {}

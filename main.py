@@ -12,7 +12,7 @@ from pathlib import Path
 
 app = QApplication(sys.argv)
 window = QWidget()
-window.resize(450, 250)
+window.resize(650, 250)
 window.setWindowIcon(QIcon(str(Path(Path(__file__).parent, 'docs/icon.png'))))
 window.setWindowTitle("Subtitle Audio Description Removal")
 listWidget = QListWidget()
@@ -31,18 +31,15 @@ def button_single_subtitle_clicked():
         grouped_actions(sub_path, CONFIRMATION_TEXT)
 
 
-''' MULTIPLE SUBS - ALL SUBS IN THE GIVEN FOLDER AND IT`S SUBFOLDER '''
+''' MULTIPLE SUBS - ALL SUBS IN THE GIVEN DIRECTORY AND IT`S SUBDIRECTORIES '''
 def button_bulk_subtitle_clicked():
-    dialog_add_folder = QFileDialog()
-    dialog_add_folder.setFileMode(QFileDialog.FileMode.Directory)
-    dialog_add_folder.setWindowTitle("Select a folder")
-    dialog_add_folder.exec()
-    if dialog_add_folder.result():
-        for dir_path, dir_names, file_names in os.walk(dialog_add_folder.selectedFiles()[0]):
+    dialog_add_directory = QFileDialog()
+    dialog_add_directory.setFileMode(QFileDialog.FileMode.Directory)
+    dialog_add_directory.setWindowTitle("Select a directory")
+    dialog_add_directory.exec()
+    if dialog_add_directory.result():
+        for dir_path, dir_names, file_names in os.walk(dialog_add_directory.selectedFiles()[0]):
             bulk_subs(dir_path, file_names)
-        for sub_dir in dir_names:
-            for sub_dir_path, sub_dir_names, sub_file_names in os.walk(dir_path, sub_dir):
-                bulk_subs(sub_dir_path, sub_file_names)
 
 
 def bulk_subs(dir_path, file_names):
@@ -71,17 +68,17 @@ def grouped_actions(sub_path, CONFIRMATION_TEXT):
 
 ''' AUDIO DESCRIPTION REMOVAL  '''
 def sub_ad_removal(sub_path, sub_list_name, sub_new_name): 
-    parent_folder = Path(sub_path).parent
+    parent_directory = Path(sub_path).parent
     file = open(sub_path, errors='ignore')  # avoiding text encoding errors
-    newFile = open(Path(parent_folder, sub_new_name),'w')  
-    sub_dic[sub_list_name] = parent_folder
+    newFile = open(Path(parent_directory, sub_new_name),'w')  
+    sub_dic[sub_list_name] = parent_directory
     
     fileList = list(file)
     slicedList = []
 
     for i in range(len(fileList)):    
-        sliced = fileList[i].split()   # cutting up the text
-        slicedList.append(sliced)      # collecting the new/transformed items in a new list       
+        sliced = fileList[i].split()   
+        slicedList.append(sliced)       
     for i in slicedList:
         for k in i:
             if ('(' in k and ')' in k or
@@ -92,17 +89,17 @@ def sub_ad_removal(sub_path, sub_list_name, sub_new_name):
                 slicedList.remove(i)                # very small chance: there are lines where both previous conditions are true
                                                     # and we remove a line with a non-commentary text
     for i in slicedList:             
-        newFile.writelines(' '.join(i))  # add a space between the list items
+        newFile.writelines(' '.join(i))
         newFile.write('\n')              
 
     file.close()
     newFile.close()
 
 
-''' DOUBLE-CLICK IN THE RESULT LIST --> OPEN THE FOLDER '''
-def open_folder():
-    webbrowser.open(sub_dic[listWidget.currentItem().text()])  
-listWidget.itemDoubleClicked.connect(open_folder)
+''' OPEN THE SUB`S DIRECTORY '''
+def open_directory():
+    webbrowser.open(sub_dic[listWidget.currentItem().text()])
+listWidget.itemDoubleClicked.connect(open_directory)
 
 
 ''' BUTTONS '''
@@ -111,7 +108,7 @@ button_single_subtitle.setCursor(Qt.CursorShape.PointingHandCursor)
 button_single_subtitle.clicked.connect(button_single_subtitle_clicked)
 button_single_subtitle.setFont(QFont('Times', 10, 500))
 
-button_bulk_subtitle = QPushButton(window, text='Select Folder - Multiple Subs')
+button_bulk_subtitle = QPushButton(window, text='Select Directory - Multiple Subs')
 button_bulk_subtitle.setCursor(Qt.CursorShape.PointingHandCursor)
 button_bulk_subtitle.clicked.connect(button_bulk_subtitle_clicked)
 button_bulk_subtitle.setFont(QFont('Times', 10, 500))

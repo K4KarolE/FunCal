@@ -2,14 +2,14 @@
 - `SADR` removes the audio description like [Horns honking in distance], (Indistinct conversations) from the subtitles
 - `Select Subtitle - Single Sub`
     - Able to select an `.srt` file
-    - Typically, ideal for movies
-- `Select Folder - Multiple Subs`
-    - In the added folder and all in it's first-degree subfolders all the `.srt` files will be transitioned
+    - Typically ideal for movies
+- `Select Directory - Multiple Subs`
+    - In the added directory and all in it's subdirectories all the `.srt` files will be transformed
     - Typically ideal for series, TV shows
 - Once the file or folder selected, the conversation and listing are triggered automatically
 - The new subtitle is saved in the same folder of the original subtitle
 - Double clicking in the result list:
-    - Opens the folder of the selected subtitle in `File Explorer`
+    - Opens the directory of the selected subtitle in `File Explorer`
 
 <div align="center">
     <img src="docs/screenshoot.png">

@@ -4,9 +4,9 @@
     - Able to select an `.srt` file
     - Typically ideal for movies
 - `Select Directory - Multiple Subs`
-    - In the added directory and all in it's subdirectories all the `.srt` files will be transformed
+    - In the added directory and in the subdirectories all the `.srt` files will be transformed
     - Typically ideal for series, TV shows
-- Once the file or folder selected, the conversation and listing are triggered automatically
+- Once the file or folder selected, the transformation and the result listing are triggered automatically
 - The new subtitle is saved in the same folder of the original subtitle
 - Double clicking in the result list:
     - Opens the directory of the selected subtitle in `File Explorer`

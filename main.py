@@ -1,13 +1,21 @@
 
-from PyQt6.QtWidgets import QApplication, QWidget, QListWidget, QVBoxLayout
-from PyQt6.QtWidgets import QFileDialog, QListWidgetItem, QPushButton 
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon, QFont
-
 import os
+from pathlib import Path
 import sys
 import webbrowser
-from pathlib import Path
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QIcon 
+from PyQt6.QtWidgets import (
+    QFileDialog,
+    QApplication,
+    QListWidget,
+    QListWidgetItem,
+    QPushButton,
+    QVBoxLayout,
+    QWidget
+    ) 
+
 
 
 app = QApplication(sys.argv)
@@ -53,11 +61,11 @@ def bulk_subs(dir_path, file_names):
 def grouped_actions(sub_path, CONFIRMATION_TEXT):
     sub_name = Path(sub_path).stem
     if CONFIRMATION_TEXT in sub_name:
-        sub_list_name = f'{sub_name} \u2713'
+        sub_list_name = f'{sub_name} \u2713'    # \u2713 = check mark
         sub_new_name = f'{sub_name}.srt'
     else:
-        sub_list_name = f'{sub_name} - {CONFIRMATION_TEXT} \u2713'
-        sub_new_name = f'{sub_name} - {CONFIRMATION_TEXT}.srt'
+        sub_list_name = f'{CONFIRMATION_TEXT} - {sub_name} \u2713'
+        sub_new_name = f'{CONFIRMATION_TEXT} - {sub_name}.srt'
     try:
         sub_ad_removal(sub_path, sub_list_name, sub_new_name)
         QListWidgetItem(sub_list_name, listWidget)
@@ -75,23 +83,65 @@ def sub_ad_removal(sub_path, sub_list_name, sub_new_name):
     
     fileList = list(file)
     slicedList = []
+    words_to_remove = []
+    rows_to_remove = []
+    spec_char_look_for = '( ) [ ]'.split()
 
     for i in range(len(fileList)):    
         sliced = fileList[i].split()   
-        slicedList.append(sliced)       
-    for i in slicedList:
-        for k in i:
-            if ('(' in k and ')' in k or
-                '[' in k and ']' in k):     # removing one word commentary from line like: "(SCOFFS) Don't be ridiculous."
-                i.remove(k)
-            elif ('(' in k and ')' not in k or
-                    '[' in k and ']' not in k):     # removing multiple words commentary from lines like: "(CHAINS RATTLING)" 
-                slicedList.remove(i)                # very small chance: there are lines where both previous conditions are true
-                                                    # and we remove a line with a non-commentary text
+        slicedList.append(sliced)
+
+    ''' 
+        Removing the whole row/line containing
+        audio description like: "(CHAINS RATTLING)"
+    '''
+    for row in slicedList:
+        for word in row:
+            if ('(' in word and ')' not in word or
+                    '[' in word and ']' not in word):
+                rows_to_remove.append(row)
+    
+    for _ in rows_to_remove:
+        slicedList.remove(_)
+    rows_to_remove.clear()
+
+              
+    ''' 
+        Removing one word commentary from line like:
+        "(SCOFFS) Don't be ridiculous."
+    '''
+    for row_index, row in enumerate(slicedList):
+        for word in row:
+            if (any(spec_char in spec_char_look_for[:2] for spec_char in word) or
+                any(spec_char in spec_char_look_for[2:] for spec_char in word)) :     
+                words_to_remove.append([row_index, word])
+
+    for _ in words_to_remove:
+        row_index, word = _[0], _[1]
+        slicedList[row_index].remove(word)
+
+        '''
+            5
+            00:00:51,079 --> 00:00:54,449
+            -
+                        to
+            5
+            00:00:51,079 --> 00:00:54,449
+
+         '''
+        if len(slicedList[row_index]) == 1:
+            word_or_symbol = slicedList[row_index][0]
+            if len(word_or_symbol) == 1 and not word_or_symbol.isdecimal():
+                rows_to_remove.append(slicedList[row_index])
+    for _ in rows_to_remove:
+        slicedList.remove(_)
+    
+
+    ''' File compiling '''
     for i in slicedList:             
         newFile.writelines(' '.join(i))
         newFile.write('\n')              
-
+    
     file.close()
     newFile.close()
 

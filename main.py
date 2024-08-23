@@ -77,8 +77,8 @@ def grouped_actions(sub_path, CONFIRMATION_TEXT):
 ''' AUDIO DESCRIPTION REMOVAL  '''
 def sub_ad_removal(sub_path, sub_list_name, sub_new_name): 
     parent_directory = Path(sub_path).parent
-    file = open(sub_path, errors='ignore')  # avoiding text encoding errors
-    newFile = open(Path(parent_directory, sub_new_name),'w')  
+    file = open(sub_path, mode='r', encoding='utf-8', errors='ignore')  # avoiding text encoding errors
+    newFile = open(Path(parent_directory, sub_new_name), mode='w', encoding='utf-8')
     sub_dic[sub_list_name] = parent_directory
     
     fileList = list(file)

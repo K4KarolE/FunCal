@@ -1,6 +1,7 @@
 
 import os
 from pathlib import Path
+import subprocess
 import sys
 import webbrowser
 
@@ -26,6 +27,7 @@ window.setWindowTitle("Subtitle Audio Description Removal")
 listWidget = QListWidget()
 sub_dic = {}
 CONFIRMATION_TEXT = 'AUDIO DESC. REMOVED'
+os_linux: bool = (sys.platform == 'linux')
 
 
 ''' SINGLE SUB '''
@@ -148,7 +150,11 @@ def sub_ad_removal(sub_path, sub_list_name, sub_new_name):
 
 ''' OPEN THE SUB`S DIRECTORY '''
 def open_directory():
-    webbrowser.open(sub_dic[listWidget.currentItem().text()])
+    dir_path = sub_dic[listWidget.currentItem().text()]
+    if os_linux:
+        subprocess.Popen(["xdg-open", 'dir_path'])
+    else:
+        webbrowser.open(dir_path)
 listWidget.itemDoubleClicked.connect(open_directory)
 
 

@@ -23,6 +23,6 @@
 ``` pip install -r requirements.txt ```
 
 ### OS
-- Tested on Windows 11
+- Tested on Windows 11 / Linux Mint 22
 
 ## Thank you all who worked on the modules used in this project!

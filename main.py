@@ -152,7 +152,7 @@ def sub_ad_removal(sub_path, sub_list_name, sub_new_name):
 def open_directory():
     dir_path = sub_dic[listWidget.currentItem().text()]
     if os_linux:
-        subprocess.Popen(["xdg-open", 'dir_path'])
+        subprocess.Popen(["xdg-open", dir_path])
     else:
         webbrowser.open(dir_path)
 listWidget.itemDoubleClicked.connect(open_directory)

@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
     QWidget
     ) 
 
-
+if sys.platform == 'linux': QApplication.setDesktopSettingsAware(False)
 
 app = QApplication(sys.argv)
 window = QWidget()
